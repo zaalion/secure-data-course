@@ -88,6 +88,38 @@ namespace MyAddressBookPlus.Controllers
             });
         }
 
+        public ActionResult DetailsCache(int id)
+        {
+            var contactService = new ContactService();
+            var contact = contactService.GetContactFromCache(id);
+
+            // in case the key does not exist in the cache.
+            if(contact == null)
+            {
+                return View(new ContactViewModel()
+                {
+                    Id = -1,
+                    Name = "Cache is not available",
+                    Phone = "Null",
+                    Email = "Null",
+                    Address = "Null",
+                    PhotoUrl = null
+                });
+            }
+
+            var photoContainerUrl = ConfigurationManager.AppSettings["photoContainerUrl"];
+
+            return View(new ContactViewModel()
+            {
+                Id = contact.Id,
+                Name = contact.Name,
+                Phone = contact.Phone,
+                Email = contact.Email,
+                Address = contact.Address,
+                PhotoUrl = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
+            });
+        }
+
         public ActionResult Delete(int id)
         {
             var contactService = new ContactService();

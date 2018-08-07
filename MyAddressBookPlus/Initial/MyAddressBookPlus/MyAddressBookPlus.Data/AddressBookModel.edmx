@@ -14,7 +14,7 @@
           <Property Name="Email" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Phone" Type="nvarchar" MaxLength="20" Nullable="false" />
           <Property Name="Address" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="PictureName" Type="nvarchar" MaxLength="50" />
+          <Property Name="PictureName" Type="nvarchar" MaxLength="100" />
         </EntityType>
         <EntityContainer Name="MyAddressBookPlusModelStoreContainer">
           <EntitySet Name="Contact" EntityType="Self.Contact" Schema="dbo" store:Type="Tables" />
@@ -32,7 +32,7 @@
           <Property Name="Email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Phone" Type="String" MaxLength="20" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Address" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="PictureName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="PictureName" Type="String" MaxLength="100" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityContainer Name="MyAddressBookPlusEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="Contacts" EntityType="Self.Contact" />
