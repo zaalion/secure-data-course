@@ -1,6 +1,8 @@
 ﻿using MyAddressBookPlus.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -38,12 +40,31 @@ namespace MyAddressBookPlus.Controllers
         {
             var contactService = new ContactService();
 
+            string pictureFilename = string.Empty;
+
+            // handling file upload
+            if (Request.Files.Count > 0)
+            {
+                var file = Request.Files[0];
+
+                if (file != null && file.ContentLength > 0)
+                {
+                    var fileName = Path.GetFileName(file.FileName);
+                    var path = Path.Combine(Server.MapPath("~/Images/"), fileName);
+                    file.SaveAs(path);
+
+                    var blobService = new BlobService();
+                    pictureFilename = blobService.UploadPictureToBlob(Server.MapPath("~/Images/"), fileName);
+                }
+            }
+
             var id = contactService.AddContact(new Data.Contact()
             {
                 Name = model.Name,
                 Address = model.Address,
                 Email = model.Email,
-                Phone = model.Phone
+                Phone = model.Phone,
+                PictureName = pictureFilename
             });
 
             return RedirectToAction("index");
@@ -52,8 +73,9 @@ namespace MyAddressBookPlus.Controllers
         public ActionResult Details(int id)
         {
             var contactService = new ContactService();
-
             var contact = contactService.GetContact(id);
+
+            var photoContainerUrl = ConfigurationManager.AppSettings["photoContainerUrl"];
 
             return View(new ContactViewModel()
             {
@@ -61,7 +83,8 @@ namespace MyAddressBookPlus.Controllers
                 Name = contact.Name,
                 Phone = contact.Phone,
                 Email = contact.Email,
-                Address = contact.Address
+                Address = contact.Address,
+                PhotoUrl = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
             });
         }
 
