@@ -10,6 +10,7 @@ namespace MyAddressBookPlus.Controllers
     public class ContactController : Controller
     {
         public ActionResult Index()
+
         {
             var contactService = new ContactService();
 
