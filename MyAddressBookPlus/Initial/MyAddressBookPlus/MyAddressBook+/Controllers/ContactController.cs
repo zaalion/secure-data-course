@@ -10,7 +10,6 @@ namespace MyAddressBookPlus.Controllers
     public class ContactController : Controller
     {
         public ActionResult Index()
-
         {
             var contactService = new ContactService();
 
@@ -28,6 +27,13 @@ namespace MyAddressBookPlus.Controllers
             return View(viewModel);
         }
 
+        [HttpGet]
+        public ActionResult Add()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public ActionResult Add(ContactViewModel model)
         {
             var contactService = new ContactService();

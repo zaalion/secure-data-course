@@ -74,8 +74,6 @@
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>AddressBookModel.Designer.cs</LastGenOutput>
     </EntityDeploy>
-  </ItemGroup>
-  <ItemGroup>
     <None Include="AddressBookModel.edmx.diagram">
       <DependentUpon>AddressBookModel.edmx</DependentUpon>
     </None>
@@ -83,19 +81,19 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="AddressBookModel.Context.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>AddressBookModel.Context.cs</LastGenOutput>
       <DependentUpon>AddressBookModel.edmx</DependentUpon>
+      <LastGenOutput>AddressBookModel.Context.cs</LastGenOutput>
     </Content>
     <Content Include="AddressBookModel.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <DependentUpon>AddressBookModel.edmx</DependentUpon>
       <LastGenOutput>AddressBookModel.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
