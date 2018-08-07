@@ -1,5 +1,8 @@
 ﻿namespace MyAddressBookPlus.Models
 {
+    /// <summary>
+    /// Contact view model which is used in the controller and views
+    /// </summary>
     public class ContactViewModel
     {
         public int Id { get; set; }

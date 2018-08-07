@@ -1,16 +1,17 @@
 ﻿using MyAddressBookPlus.Models;
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MyAddressBookPlus.Controllers
 {
     public class ContactController : Controller
     {
+        /// <summary>
+        /// Default action which shows a list of all contacts
+        /// </summary>
+        /// <returns></returns>
         public ActionResult Index()
         {
             var contactService = new ContactService();
@@ -29,20 +30,28 @@ namespace MyAddressBookPlus.Controllers
             return View(viewModel);
         }
 
+        /// <summary>
+        /// Shows "Add" form
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         public ActionResult Add()
         {
             return View();
         }
 
+        /// <summary>
+        /// Adds a new contact to the database
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         [HttpPost]
         public ActionResult Add(ContactViewModel model)
         {
             var contactService = new ContactService();
 
+            // Handling file upload; save the uploaded contact picture into Azure blob storage.
             string pictureFilename = string.Empty;
-
-            // handling file upload
             if (Request.Files.Count > 0)
             {
                 var file = Request.Files[0];
@@ -70,6 +79,11 @@ namespace MyAddressBookPlus.Controllers
             return RedirectToAction("index");
         }
 
+        /// <summary>
+        /// Shows specific contact details from database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Details(int id)
         {
             var contactService = new ContactService();
@@ -88,12 +102,17 @@ namespace MyAddressBookPlus.Controllers
             });
         }
 
+        /// <summary>
+        /// Shows specific contact details from Redis cache
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult DetailsCache(int id)
         {
             var contactService = new ContactService();
             var contact = contactService.GetContactFromCache(id);
 
-            // in case the key does not exist in the cache.
+            // in case the key does not exist in the cache; returning a fall-back model
             if(contact == null)
             {
                 return View(new ContactViewModel()
@@ -120,6 +139,11 @@ namespace MyAddressBookPlus.Controllers
             });
         }
 
+        /// <summary>
+        /// Deletes a specific contact from database and cache
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public ActionResult Delete(int id)
         {
             var contactService = new ContactService();

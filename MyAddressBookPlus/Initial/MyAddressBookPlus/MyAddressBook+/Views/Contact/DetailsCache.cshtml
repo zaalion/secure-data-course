@@ -13,49 +13,55 @@
 </head>
 <body>
     <div>
-        <h4>ContactViewModel</h4>
+        <h4>ContactViewModel from Cache</h4>
+        @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+        {
+            <hr />
+            <img width="150" src="@Model.PhotoUrl" />
+        }
+        <hr />
         <hr />
         <dl class="dl-horizontal">
             <dt>
                 @Html.DisplayNameFor(model => model.Name)
             </dt>
-    
+
             <dd>
                 @Html.DisplayFor(model => model.Name)
             </dd>
-    
+
             <dt>
                 @Html.DisplayNameFor(model => model.Email)
             </dt>
-    
+
             <dd>
                 @Html.DisplayFor(model => model.Email)
             </dd>
-    
+
             <dt>
                 @Html.DisplayNameFor(model => model.Phone)
             </dt>
-    
+
             <dd>
                 @Html.DisplayFor(model => model.Phone)
             </dd>
-    
+
             <dt>
                 @Html.DisplayNameFor(model => model.Address)
             </dt>
-    
+
             <dd>
                 @Html.DisplayFor(model => model.Address)
             </dd>
-    
+
             <dt>
                 @Html.DisplayNameFor(model => model.PhotoUrl)
             </dt>
-    
+
             <dd>
                 @Html.DisplayFor(model => model.PhotoUrl)
             </dd>
-    
+
         </dl>
     </div>
     <p>

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using StackExchange.Redis;
 using System.Configuration;
 using Newtonsoft.Json;
@@ -11,22 +10,18 @@ namespace MyAddressBookPlus
 {
     public class ContactService
     {
+        // Redis cache initialization
         private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
         {
             string cacheConnection = ConfigurationManager.AppSettings["CacheConnection"].ToString();
             return ConnectionMultiplexer.Connect(cacheConnection);
-        });
-
-        public static ConnectionMultiplexer Connection
-        {
-            get
-            {
-                return lazyConnection.Value;
-            }
-        }
-
+        });        
         IDatabase cache = lazyConnection.Value.GetDatabase();
 
+        /// <summary>
+        /// Gets all contacts from database
+        /// </summary>
+        /// <returns></returns>
         public List<Contact> GetContacts()
         {
             var context = new MyAddressBookPlusEntities();
@@ -34,6 +29,11 @@ namespace MyAddressBookPlus
             return contacts;
         }
 
+        /// <summary>
+        /// Gets a specific contact from database
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Contact GetContact(int id)
         {
             var context = new MyAddressBookPlusEntities();
@@ -42,6 +42,11 @@ namespace MyAddressBookPlus
             return contact;
         }
 
+        /// <summary>
+        /// Gets a specific contact from Redis cache
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public Contact GetContactFromCache(int id)
         {
             var cacheContent = cache.StringGet(id.ToString());
@@ -54,6 +59,11 @@ namespace MyAddressBookPlus
             return null;
         }
 
+        /// <summary>
+        /// Adds a new contact to the database and cache
+        /// </summary>
+        /// <param name="contact"></param>
+        /// <returns></returns>
         public int AddContact(Contact contact)
         {
             var context = new MyAddressBookPlusEntities();
@@ -68,6 +78,11 @@ namespace MyAddressBookPlus
             return newId;
         }
 
+        /// <summary>
+        /// deletes a given contact from database and cache
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public bool DeleteContact(int id)
         {
             var context = new MyAddressBookPlusEntities();
