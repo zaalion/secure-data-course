@@ -81,6 +81,9 @@ namespace MyAddressBookPlus
             context.Contacts.Remove(contactToDelete);
             context.SaveChanges();
 
+            // remove the item from cache
+            cache.KeyDelete(id.ToString());
+
             return true;
         }
     }
