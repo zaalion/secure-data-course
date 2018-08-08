@@ -21,6 +21,7 @@ namespace MyAddressBookPlus.Data
         public MyAddressBookPlusEntities(SqlConnection conn)
             : base("name=MyAddressBookPlusEntities")
         {
+            conn.ConnectionString = WebConfigurationManager.ConnectionStrings["MyAddressBookPlusEntities"].ConnectionString;
             conn.AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
             Database.SetInitializer<MyAddressBookPlusEntities>(null);
         }
