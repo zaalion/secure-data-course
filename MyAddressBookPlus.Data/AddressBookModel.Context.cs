@@ -12,14 +12,19 @@ namespace MyAddressBookPlus.Data
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+    using System.Data.SqlClient;
+    using Microsoft.Azure.Services.AppAuthentication;
+    using System.Web.Configuration;
+
     public partial class MyAddressBookPlusEntities : DbContext
     {
-        public MyAddressBookPlusEntities()
+        public MyAddressBookPlusEntities(SqlConnection conn)
             : base("name=MyAddressBookPlusEntities")
         {
+            conn.AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+            Database.SetInitializer<MyAddressBookPlusEntities>(null);
         }
-    
+        
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             throw new UnintentionalCodeFirstException();

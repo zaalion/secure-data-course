@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using StackExchange.Redis;
 using Newtonsoft.Json;
+using System.Data.SqlClient;
 
 namespace MyAddressBookPlus
 {
@@ -23,7 +24,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public List<Contact> GetContacts()
         {
-            var context = new MyAddressBookPlusEntities();
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             var contacts = context.Contacts.ToList();
             return contacts;
         }
@@ -35,7 +36,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public Contact GetContact(int id)
         {
-            var context = new MyAddressBookPlusEntities();
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             var contact = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             return contact;
@@ -65,7 +66,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public int AddContact(Contact contact)
         {
-            var context = new MyAddressBookPlusEntities();
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             context.Contacts.Add(contact);
             context.SaveChanges();
 
@@ -84,7 +85,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public bool DeleteContact(int id)
         {
-            var context = new MyAddressBookPlusEntities();
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             var contactToDelete = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             if(contactToDelete == null)
