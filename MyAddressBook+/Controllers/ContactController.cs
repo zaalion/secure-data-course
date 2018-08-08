@@ -8,6 +8,16 @@ namespace MyAddressBookPlus.Controllers
 {
     public class ContactController : Controller
     {
+        [Route("test")]
+        [HttpGet]
+        public ActionResult Test()
+        {            
+            return new ContentResult()
+            {
+                Content = "test"
+            };
+        }
+
         /// <summary>
         /// Default action which shows a list of all contacts
         /// </summary>
