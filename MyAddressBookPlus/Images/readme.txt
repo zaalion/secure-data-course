@@ -1,0 +1,1 @@
+﻿Temporary uploaded files are copied here and then uploaded to Azure blob storage.
