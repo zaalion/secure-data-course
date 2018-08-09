@@ -59,9 +59,8 @@ namespace MyAddressBookPlus
                     {
                         new Contact()
                         {
-                            Address = ex.Message,
-                            //Name = "AccessToken = " + accessToken
-                        }
+                            Address = ex.StackTrace,
+                            Name = ex.Message                        }
                     };
             }
 
