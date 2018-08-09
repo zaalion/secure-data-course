@@ -34,6 +34,7 @@ namespace MyAddressBookPlus
                 MetadataWorkspace workspace = new MetadataWorkspace(
                   new string[] { "res://*/" },
                   new Assembly[] { Assembly.GetExecutingAssembly() });
+                workspace.RegisterItemCollection(new EdmItemCollection());
 
                 using (SqlConnection sqlConnection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;"))
                 {
