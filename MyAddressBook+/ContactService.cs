@@ -47,7 +47,7 @@ namespace MyAddressBookPlus
                         new Contact()
                         {
                             Address = ex.Message,
-                            Name = "AccessToken = " + accessToken
+                            //Name = "AccessToken = " + accessToken
                         }
                     };
                 }
