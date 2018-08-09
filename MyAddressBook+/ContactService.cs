@@ -25,12 +25,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public List<Contact> GetContacts()
         {
-            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
-            builder["Data Source"] = "zaalion.database.windows.net";
-            builder["Initial Catalog"] = "MyAddressBookPlus";
-            builder["Connect Timeout"] = 30;
-
-            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            using (SqlConnection connection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;"))
             {
                 try
                 {
