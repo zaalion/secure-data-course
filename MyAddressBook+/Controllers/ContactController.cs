@@ -1,5 +1,6 @@
 ﻿using MyAddressBookPlus.Models;
 using System.Configuration;
+using System;
 using System.IO;
 using System.Linq;
 using System.Web.Mvc;
@@ -24,20 +25,37 @@ namespace MyAddressBookPlus.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            var contactService = new ContactService();
-
-            var contacts = contactService.GetContacts();
-
-            var viewModel = contacts.Select(c => new ContactViewModel()
+            try
             {
-                Id = c.Id,
-                Name = c.Name,
-                Phone = c.Phone,
-                Email = c.Email,
-                Address = c.Address
-            });
+                var contactService = new ContactService();
 
-            return View(viewModel);
+                var contacts = contactService.GetContacts();
+
+                var viewModel = contacts.Select(c => new ContactViewModel()
+                {
+                    Id = c.Id,
+                    Name = c.Name,
+                    Phone = c.Phone,
+                    Email = c.Email,
+                    Address = c.Address
+                });
+
+                return View(viewModel);
+            }
+            catch(Exception ex)
+            {                
+                var viewModel = new ContactViewModel()
+                {
+                    Id = -1,
+                    Name = ex.Message,
+                    Phone = "",
+                    Email = "",
+                    Address = ex.StackTrace
+                };
+
+                return View(viewModel);
+            }
+            
         }
 
         /// <summary>
