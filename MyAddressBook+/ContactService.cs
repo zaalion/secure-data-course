@@ -26,7 +26,7 @@ namespace MyAddressBookPlus
         public List<Contact> GetContacts()
         {
             var accessToken = string.Empty;
-            using (SqlConnection connection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;"))
+            using (SqlConnection connection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;App=EntityFramework"))
             {
                 try
                 {
