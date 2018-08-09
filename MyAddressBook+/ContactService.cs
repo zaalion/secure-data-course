@@ -5,6 +5,7 @@ using System.Linq;
 using StackExchange.Redis;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
+using Microsoft.Azure.Services.AppAuthentication;
 
 namespace MyAddressBookPlus
 {
@@ -24,9 +25,32 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public List<Contact> GetContacts()
         {
-            var context = new MyAddressBookPlusEntities();
-            var contacts = context.Contacts.ToList();
-            return contacts;
+            SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder();
+            builder["Data Source"] = "zaalion.database.windows.net";
+            builder["Initial Catalog"] = "MyAddressBookPlus";
+            builder["Connect Timeout"] = 30;
+
+            using (SqlConnection connection = new SqlConnection(builder.ConnectionString))
+            {
+                try
+                {
+                    var accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+
+                    connection.AccessToken = accessToken;
+                    //working with EF
+                    using (var context = new MyAddressBookPlusEntities(connection))
+                    {
+                        var contacts = context.Contacts.ToList();
+                        return contacts;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                }
+            }
+
+            return new List<Contact>();
         }
 
         /// <summary>
@@ -36,7 +60,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public Contact GetContact(int id)
         {
-            var context = new MyAddressBookPlusEntities();
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             var contact = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             return contact;
@@ -66,7 +90,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public int AddContact(Contact contact)
         {
-            var context = new MyAddressBookPlusEntities();
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             context.Contacts.Add(contact);
             context.SaveChanges();
 
@@ -85,7 +109,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public bool DeleteContact(int id)
         {
-            var context = new MyAddressBookPlusEntities();
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             var contactToDelete = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             if(contactToDelete == null)

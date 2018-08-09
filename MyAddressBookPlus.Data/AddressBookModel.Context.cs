@@ -18,9 +18,11 @@ namespace MyAddressBookPlus.Data
 
     public partial class MyAddressBookPlusEntities : DbContext
     {
-        public MyAddressBookPlusEntities()
-            : base("name=MyAddressBookPlusEntities")
+        public MyAddressBookPlusEntities(SqlConnection con) : base(con, true)
         {
+            var accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+
+            Database.SetInitializer<MyAddressBookPlusEntities>(null);
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
