@@ -25,11 +25,12 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public List<Contact> GetContacts()
         {
+            var accessToken = string.Empty;
             using (SqlConnection connection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;"))
             {
                 try
                 {
-                    var accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+                    accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
 
                     connection.AccessToken = accessToken;
                     //working with EF
@@ -41,11 +42,18 @@ namespace MyAddressBookPlus
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    return new List<Contact>
+                    {
+                        new Contact()
+                        {
+                            Address = ex.Message,
+                            Name = "AccessToken = " + accessToken
+                        }
+                    };
                 }
             }
 
-            return new List<Contact>();
+            
         }
 
         /// <summary>
