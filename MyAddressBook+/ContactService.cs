@@ -38,7 +38,7 @@ namespace MyAddressBookPlus
                 workspace.RegisterItemCollection(new StoreItemCollection());
                 workspace.RegisterItemCollection(new ObjectItemCollection());
 
-                using (SqlConnection sqlConnection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;"))
+                using (SqlConnection sqlConnection = new SqlConnection("Data Source=zaalion.database.windows.net;Initial Catalog=MyAddressBookPlus;MultipleActiveResultSets=True;"))
                 {
                     accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
                     sqlConnection.AccessToken = accessToken;
