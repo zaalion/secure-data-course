@@ -25,37 +25,20 @@ namespace MyAddressBookPlus.Controllers
         /// <returns></returns>
         public ActionResult Index()
         {
-            try
+            var contactService = new ContactService();
+
+            var contacts = contactService.GetContacts();
+
+            var viewModel = contacts.Select(c => new Contact()
             {
-                var contactService = new ContactService();
+                Id = c.Id,
+                Name = c.Name,
+                Phone = c.Phone,
+                Email = c.Email,
+                Address = c.Address
+            });
 
-                var contacts = contactService.GetContacts();
-
-                var viewModel = contacts.Select(c => new ContactViewModel()
-                {
-                    Id = c.Id,
-                    Name = c.Name,
-                    Phone = c.Phone,
-                    Email = c.Email,
-                    Address = c.Address
-                });
-
-                return View(viewModel);
-            }
-            catch(Exception ex)
-            {                
-                var viewModel = new ContactViewModel()
-                {
-                    Id = -1,
-                    Name = ex.Message,
-                    Phone = "",
-                    Email = "",
-                    Address = ex.StackTrace
-                };
-
-                return View(viewModel);
-            }
-            
+            return View(viewModel);
         }
 
         /// <summary>
@@ -74,7 +57,7 @@ namespace MyAddressBookPlus.Controllers
         /// <param name="model"></param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult Add(ContactViewModel model)
+        public ActionResult Add(Contact model)
         {
             var contactService = new ContactService();
 
@@ -95,7 +78,7 @@ namespace MyAddressBookPlus.Controllers
                 }
             }
 
-            var id = contactService.AddContact(new Data.Contact()
+            var id = contactService.AddContact(new Contact()
             {
                 Name = model.Name,
                 Address = model.Address,
@@ -119,14 +102,14 @@ namespace MyAddressBookPlus.Controllers
 
             var photoContainerUrl = ConfigurationManager.AppSettings["photoContainerUrl"];
 
-            return View(new ContactViewModel()
+            return View(new Contact()
             {
                 Id = contact.Id,
                 Name = contact.Name,
                 Phone = contact.Phone,
                 Email = contact.Email,
                 Address = contact.Address,
-                PhotoUrl = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
+                PictureName = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
             });
         }
 
@@ -143,27 +126,27 @@ namespace MyAddressBookPlus.Controllers
             // in case the key does not exist in the cache; returning a fall-back model
             if(contact == null)
             {
-                return View(new ContactViewModel()
+                return View(new Contact()
                 {
                     Id = -1,
                     Name = "Cache is not available",
                     Phone = "Null",
                     Email = "Null",
                     Address = "Null",
-                    PhotoUrl = null
+                    PictureName = null
                 });
             }
 
             var photoContainerUrl = ConfigurationManager.AppSettings["photoContainerUrl"];
 
-            return View(new ContactViewModel()
+            return View(new Contact()
             {
                 Id = contact.Id,
                 Name = contact.Name,
                 Phone = contact.Phone,
                 Email = contact.Email,
                 Address = contact.Address,
-                PhotoUrl = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
+                PictureName = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
             });
         }
 
