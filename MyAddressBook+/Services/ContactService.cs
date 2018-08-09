@@ -7,7 +7,7 @@ using System.Configuration;
 using Newtonsoft.Json;
 using MyAddressBookPlus.Models;
 
-namespace MyAddressBookPlus
+namespace MyAddressBookPlus.Services
 {
     public class ContactService
     {

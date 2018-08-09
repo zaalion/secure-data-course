@@ -124,8 +124,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
-    <Compile Include="BlobService.cs" />
-    <Compile Include="ContactService.cs" />
+    <Compile Include="Services\BlobService.cs" />
+    <Compile Include="Services\ContactService.cs" />
     <Compile Include="Controllers\ContactController.cs" />
     <Compile Include="Data\ContactRepository.cs" />
     <Compile Include="Data\IContactRepository.cs" />
