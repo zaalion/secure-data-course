@@ -120,34 +120,50 @@ namespace MyAddressBookPlus.Controllers
         /// <returns></returns>
         public ActionResult DetailsCache(int id)
         {
-            var contactService = new ContactService();
-            var contact = contactService.GetContactFromCache(id);
+            try
+            {
+                var contactService = new ContactService();
+                var contact = contactService.GetContactFromCache(id);
 
-            // in case the key does not exist in the cache; returning a fall-back model
-            if(contact == null)
+                // in case the key does not exist in the cache; returning a fall-back model
+                if (contact == null)
+                {
+                    return View(new Contact()
+                    {
+                        Id = -1,
+                        Name = "Cache is not available",
+                        Phone = "Null",
+                        Email = "Null",
+                        Address = "Null",
+                        PictureName = null
+                    });
+                }
+
+                var photoContainerUrl = ConfigurationManager.AppSettings["photoContainerUrl"];
+
+                return View(new Contact()
+                {
+                    Id = contact.Id,
+                    Name = contact.Name,
+                    Phone = contact.Phone,
+                    Email = contact.Email,
+                    Address = contact.Address,
+                    PictureName = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
+                });
+            }
+            catch(Exception ex)
             {
                 return View(new Contact()
                 {
-                    Id = -1,
-                    Name = "Cache is not available",
-                    Phone = "Null",
-                    Email = "Null",
-                    Address = "Null",
+                    Id = 0,
+                    Name = ex.Message,
+                    Phone = null,
+                    Email = null,
+                    Address = ex.StackTrace,
                     PictureName = null
                 });
             }
-
-            var photoContainerUrl = ConfigurationManager.AppSettings["photoContainerUrl"];
-
-            return View(new Contact()
-            {
-                Id = contact.Id,
-                Name = contact.Name,
-                Phone = contact.Phone,
-                Email = contact.Email,
-                Address = contact.Address,
-                PictureName = string.IsNullOrEmpty(contact.PictureName) ? null : $"{photoContainerUrl}{contact.PictureName}"
-            });
+            
         }
 
         /// <summary>
