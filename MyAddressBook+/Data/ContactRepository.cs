@@ -5,6 +5,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using MyAddressBookPlus.Models;
+using Microsoft.Azure.Services.AppAuthentication;
+using System.Web.Configuration;
 
 namespace MyAddressBookPlus.Data
 {
@@ -14,8 +16,15 @@ namespace MyAddressBookPlus.Data
 
         public ContactRepository()
         {
-            var connectionstring = ConfigurationManager.ConnectionStrings["SqlDataConnection"].ConnectionString;
-            db = new SqlConnection(connectionstring);
+            var connectionstringMsi = ConfigurationManager.ConnectionStrings["SqlDataConnectionMsi"].ConnectionString;
+
+            // configuring MSI
+            var accesstoken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+            db = new SqlConnection()
+            {
+                AccessToken = accesstoken,
+                ConnectionString = connectionstringMsi
+            };
         }
         
         public int AddContact(Contact contact)
