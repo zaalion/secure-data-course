@@ -5,6 +5,7 @@ using System.Linq;
 using StackExchange.Redis;
 using System.Configuration;
 using Newtonsoft.Json;
+using MyAddressBookPlus.Models;
 
 namespace MyAddressBookPlus
 {
@@ -24,8 +25,8 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public List<Contact> GetContacts()
         {
-            var context = new MyAddressBookPlusEntities();
-            var contacts = context.Contacts.ToList();
+            var contactRepository = new ContactRepository();
+            var contacts = contactRepository.GetContacts();
             return contacts;
         }
 
@@ -36,8 +37,8 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public Contact GetContact(int id)
         {
-            var context = new MyAddressBookPlusEntities();
-            var contact = context.Contacts.SingleOrDefault(c => c.Id == id);
+            var contactRepository = new ContactRepository();
+            var contact = contactRepository.GetContact(id);
 
             return contact;
         }
@@ -66,9 +67,8 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public int AddContact(Contact contact)
         {
-            var context = new MyAddressBookPlusEntities();
-            context.Contacts.Add(contact);
-            context.SaveChanges();
+            var contactRepository = new ContactRepository();
+            contactRepository.AddContact(contact);
 
             var newId = contact.Id;
 
@@ -85,21 +85,16 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public bool DeleteContact(int id)
         {
-            var context = new MyAddressBookPlusEntities();
-            var contactToDelete = context.Contacts.SingleOrDefault(c => c.Id == id);
+            var contactRepository = new ContactRepository();
+            var success = contactRepository.DeleteContact(id);
 
-            if(contactToDelete == null)
+            if (success)
             {
-                return false;
+                // remove the item from cache
+                cache.KeyDelete(id.ToString());
             }
 
-            context.Contacts.Remove(contactToDelete);
-            context.SaveChanges();
-
-            // remove the item from cache
-            cache.KeyDelete(id.ToString());
-
-            return true;
+            return success;
         }
     }
 }

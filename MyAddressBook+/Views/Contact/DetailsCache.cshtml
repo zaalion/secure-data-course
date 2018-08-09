@@ -1,4 +1,4 @@
-﻿@model MyAddressBookPlus.Models.ContactViewModel
+﻿@model MyAddressBookPlus.Models.Contact
 
 @{
     Layout = null;
@@ -14,10 +14,10 @@
 <body>
     <div>
         <h4>ContactViewModel from Cache</h4>
-        @if (!string.IsNullOrEmpty(Model.PhotoUrl))
+        @if (!string.IsNullOrEmpty(Model.PictureName))
         {
             <hr />
-            <img width="150" src="@Model.PhotoUrl" />
+            <img width="150" src="@Model.PictureName" />
         }
         <hr />
         <hr />
@@ -55,11 +55,11 @@
             </dd>
 
             <dt>
-                @Html.DisplayNameFor(model => model.PhotoUrl)
+                @Html.DisplayNameFor(model => model.PictureName)
             </dt>
 
             <dd>
-                @Html.DisplayFor(model => model.PhotoUrl)
+                @Html.DisplayFor(model => model.PictureName)
             </dd>
 
         </dl>
