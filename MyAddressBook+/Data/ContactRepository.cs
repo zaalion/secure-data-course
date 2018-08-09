@@ -21,7 +21,8 @@ namespace MyAddressBookPlus.Data
         public int AddContact(Contact contact)
         {
             var sql = "INSERT INTO dbo.[Contact] ([Name] ,[Email] ,[Phone] ,[Address] ,[PictureName]) VALUES" +
-                "(@name, @email, @phone, @address, @picturename)";
+                "(@Name, @Email, @Phone, @Address, @Picturename); " +
+                "SELECT CAST(SCOPE_IDENTITY() AS INT)";
             var id = this.db.Query<int>(sql, contact).Single();
             contact.Id = id;
             return id;
