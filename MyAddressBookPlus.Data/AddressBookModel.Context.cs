@@ -21,6 +21,7 @@ namespace MyAddressBookPlus.Data
     {
         public MyAddressBookPlusEntities(SqlConnection conn) : base(conn, true)
         {
+
             conn.ConnectionString = WebConfigurationManager.ConnectionStrings["MyAddressBookPlusEntities"].ConnectionString;
             // DataSource != LocalDB means app is running in Azure with the SQLDB connection string you configured
             if (conn.DataSource != "(localdb)\\MSSQLLocalDB")
