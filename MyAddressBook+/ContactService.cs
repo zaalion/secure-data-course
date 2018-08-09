@@ -31,23 +31,24 @@ namespace MyAddressBookPlus
             var accessToken = string.Empty;
             try
             {
-                MetadataWorkspace wksp = new MetadataWorkspace();
+                MetadataWorkspace workspace = new MetadataWorkspace(
+                  new string[] { "res://*/" },
+                  new Assembly[] { Assembly.GetExecutingAssembly() });
 
-                wksp.LoadFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
-
-                accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
-
-                SqlConnection sqlConnection = 
-                    new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;");
-                sqlConnection.AccessToken = accessToken;
-                EntityConnection entityConnection = new EntityConnection(wksp, sqlConnection);
-
-                //working with EF
-                using (var context = new MyAddressBookPlusEntities(entityConnection))
+                using (SqlConnection sqlConnection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;"))
                 {
-                    var contacts = context.Contacts.ToList();
-                    return contacts;
-                }
+                    accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+                    sqlConnection.AccessToken = accessToken;
+
+                    using (EntityConnection entityConnection = new EntityConnection(workspace, sqlConnection))
+                    {
+                        using (var context = new MyAddressBookPlusEntities(entityConnection))
+                        {
+                            var contacts = context.Contacts.ToList();
+                            return contacts;
+                        }
+                    }                    
+                }                
             }
             catch (Exception ex)
             {
