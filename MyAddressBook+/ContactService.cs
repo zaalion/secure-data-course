@@ -24,7 +24,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public List<Contact> GetContacts()
         {
-            var context = new MyAddressBookPlusEntities(new SqlConnection());
+            var context = new MyAddressBookPlusEntities();
             var contacts = context.Contacts.ToList();
             return contacts;
         }
@@ -36,7 +36,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public Contact GetContact(int id)
         {
-            var context = new MyAddressBookPlusEntities(new SqlConnection());
+            var context = new MyAddressBookPlusEntities();
             var contact = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             return contact;
@@ -66,7 +66,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public int AddContact(Contact contact)
         {
-            var context = new MyAddressBookPlusEntities(new SqlConnection());
+            var context = new MyAddressBookPlusEntities();
             context.Contacts.Add(contact);
             context.SaveChanges();
 
@@ -85,7 +85,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public bool DeleteContact(int id)
         {
-            var context = new MyAddressBookPlusEntities(new SqlConnection());
+            var context = new MyAddressBookPlusEntities();
             var contactToDelete = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             if(contactToDelete == null)
