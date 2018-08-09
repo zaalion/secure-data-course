@@ -28,30 +28,11 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public List<Contact> GetContacts()
         {
-            var accessToken = string.Empty;
             try
             {
-                MetadataWorkspace workspace = new MetadataWorkspace(
-                  new string[] { "res://*/" },
-                  new Assembly[] { Assembly.GetExecutingAssembly() });
-                workspace.RegisterItemCollection(new EdmItemCollection());
-                workspace.RegisterItemCollection(new StoreItemCollection());
-                workspace.RegisterItemCollection(new ObjectItemCollection());
-
-                using (SqlConnection sqlConnection = new SqlConnection("Data Source=zaalion.database.windows.net;Initial Catalog=MyAddressBookPlus;MultipleActiveResultSets=True;Application Name=EntityFramework;"))
-                {
-                    accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
-                    sqlConnection.AccessToken = accessToken;
-
-                    using (EntityConnection entityConnection = new EntityConnection(workspace, sqlConnection))
-                    {
-                        using (var context = new MyAddressBookPlusEntities(entityConnection))
-                        {
-                            var contacts = context.Contacts.ToList();
-                            return contacts;
-                        }
-                    }                    
-                }                
+                var context = new MyAddressBookPlusEntities(new SqlConnection());
+                var contacts = context.Contacts.ToList();
+                return contacts;
             }
             catch (Exception ex)
             {
@@ -63,8 +44,6 @@ namespace MyAddressBookPlus
                             Name = ex.Message                        }
                     };
             }
-
-
         }
 
         /// <summary>
@@ -74,7 +53,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public Contact GetContact(int id)
         {
-            var context = new MyAddressBookPlusEntities(new EntityConnection());
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             var contact = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             return contact;
@@ -104,7 +83,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public int AddContact(Contact contact)
         {
-            var context = new MyAddressBookPlusEntities(new EntityConnection());
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             context.Contacts.Add(contact);
             context.SaveChanges();
 
@@ -123,7 +102,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public bool DeleteContact(int id)
         {
-            var context = new MyAddressBookPlusEntities(new EntityConnection());
+            var context = new MyAddressBookPlusEntities(new SqlConnection());
             var contactToDelete = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             if(contactToDelete == null)

@@ -19,9 +19,12 @@ namespace MyAddressBookPlus.Data
 
     public partial class MyAddressBookPlusEntities : DbContext
     {
-        public MyAddressBookPlusEntities(EntityConnection con) : base(con, true)
+        public MyAddressBookPlusEntities(SqlConnection conn) : base(conn, true)
         {
-            var accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+            conn.ConnectionString = WebConfigurationManager.ConnectionStrings["MyAddressBookPlusEntities"].ConnectionString;
+            // DataSource != LocalDB means app is running in Azure with the SQLDB connection string you configured
+            if (conn.DataSource != "(localdb)\\MSSQLLocalDB")
+                conn.AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
 
             Database.SetInitializer<MyAddressBookPlusEntities>(null);
         }
