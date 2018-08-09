@@ -31,15 +31,16 @@ namespace MyAddressBookPlus
             var accessToken = string.Empty;
             try
             {
-                MetadataWorkspace workspace = new MetadataWorkspace( new string[] { "res://*/" }
-                , new Assembly[] { Assembly.GetExecutingAssembly() });
+                MetadataWorkspace wksp = new MetadataWorkspace();
+
+                wksp.LoadFromAssembly(System.Reflection.Assembly.GetExecutingAssembly());
 
                 accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
 
                 SqlConnection sqlConnection = 
                     new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;");
                 sqlConnection.AccessToken = accessToken;
-                EntityConnection entityConnection = new EntityConnection(workspace, sqlConnection);
+                EntityConnection entityConnection = new EntityConnection(wksp, sqlConnection);
 
                 //working with EF
                 using (var context = new MyAddressBookPlusEntities(entityConnection))
