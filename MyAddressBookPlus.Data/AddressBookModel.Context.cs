@@ -15,10 +15,11 @@ namespace MyAddressBookPlus.Data
     using System.Data.SqlClient;
     using Microsoft.Azure.Services.AppAuthentication;
     using System.Web.Configuration;
+    using System.Data.Entity.Core.EntityClient;
 
     public partial class MyAddressBookPlusEntities : DbContext
     {
-        public MyAddressBookPlusEntities(SqlConnection con) : base(con, true)
+        public MyAddressBookPlusEntities(EntityConnection con) : base(con, true)
         {
             var accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
 

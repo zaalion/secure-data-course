@@ -6,6 +6,9 @@ using StackExchange.Redis;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
 using Microsoft.Azure.Services.AppAuthentication;
+using System.Data.Entity.Core.EntityClient;
+using System.Data.Entity.Core.Metadata.Edm;
+using System.Reflection;
 
 namespace MyAddressBookPlus
 {
@@ -26,23 +29,28 @@ namespace MyAddressBookPlus
         public List<Contact> GetContacts()
         {
             var accessToken = string.Empty;
-            using (SqlConnection connection = new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;App=EntityFramework"))
+            try
             {
-                try
-                {
-                    accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+                MetadataWorkspace workspace = new MetadataWorkspace( new string[] { "res://*/" }
+                , new Assembly[] { Assembly.GetExecutingAssembly() });
 
-                    connection.AccessToken = accessToken;
-                    //working with EF
-                    using (var context = new MyAddressBookPlusEntities(connection))
-                    {
-                        var contacts = context.Contacts.ToList();
-                        return contacts;
-                    }
-                }
-                catch (Exception ex)
+                accessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").Result;
+
+                SqlConnection sqlConnection = 
+                    new SqlConnection("Server=tcp:zaalion.database.windows.net,1433;Database=MyAddressBookPlus;MultipleActiveResultSets=True;");
+                sqlConnection.AccessToken = accessToken;
+                EntityConnection entityConnection = new EntityConnection(workspace, sqlConnection);
+
+                //working with EF
+                using (var context = new MyAddressBookPlusEntities(entityConnection))
                 {
-                    return new List<Contact>
+                    var contacts = context.Contacts.ToList();
+                    return contacts;
+                }
+            }
+            catch (Exception ex)
+            {
+                return new List<Contact>
                     {
                         new Contact()
                         {
@@ -50,10 +58,9 @@ namespace MyAddressBookPlus
                             //Name = "AccessToken = " + accessToken
                         }
                     };
-                }
             }
 
-            
+
         }
 
         /// <summary>
@@ -63,7 +70,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public Contact GetContact(int id)
         {
-            var context = new MyAddressBookPlusEntities(new SqlConnection());
+            var context = new MyAddressBookPlusEntities(new EntityConnection());
             var contact = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             return contact;
@@ -93,7 +100,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public int AddContact(Contact contact)
         {
-            var context = new MyAddressBookPlusEntities(new SqlConnection());
+            var context = new MyAddressBookPlusEntities(new EntityConnection());
             context.Contacts.Add(contact);
             context.SaveChanges();
 
@@ -112,7 +119,7 @@ namespace MyAddressBookPlus
         /// <returns></returns>
         public bool DeleteContact(int id)
         {
-            var context = new MyAddressBookPlusEntities(new SqlConnection());
+            var context = new MyAddressBookPlusEntities(new EntityConnection());
             var contactToDelete = context.Contacts.SingleOrDefault(c => c.Id == id);
 
             if(contactToDelete == null)
