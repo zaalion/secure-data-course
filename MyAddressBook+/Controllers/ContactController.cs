@@ -37,6 +37,7 @@ namespace MyAddressBookPlus.Controllers
         [HttpGet]
         public ActionResult Add()
         {
+            // loads the form
             return View();
         }
 
