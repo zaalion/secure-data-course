@@ -1,0 +1,71 @@
+﻿@model MyAddressBookPlus.Models.Contact
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>DetailsCache</title>
+</head>
+<body>
+    <div>
+        <h4>ContactViewModel from Cache</h4>
+        @if (!string.IsNullOrEmpty(Model.PictureName))
+        {
+            <hr />
+            <img width="150" src="@Model.PictureName" />
+        }
+        <hr />
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                @Html.DisplayNameFor(model => model.Name)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Name)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Phone)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Phone)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.PictureName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.PictureName)
+            </dd>
+
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>
