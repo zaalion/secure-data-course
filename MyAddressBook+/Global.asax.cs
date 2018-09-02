@@ -11,6 +11,12 @@ namespace MyAddressBookPlus
         {
             AreaRegistration.RegisterAllAreas();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
+
+            var kv = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(KeyVaultService.GetToken));
+            var sec = kv.GetSecretAsync(WebConfigurationManager.AppSettings["CacheConnectionSecretUri"]).Result;
+            KeyVaultService.CacheConnection = sec.Value;
+
+            AlwaysEncryptedInitializer.InitializeAzureKeyVaultProvider();
         }
     }
 }

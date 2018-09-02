@@ -6,7 +6,6 @@ using StackExchange.Redis;
 using Newtonsoft.Json;
 using System.Data.SqlClient;
 using MyAddressBookPlus.Models;
-using System.Configuration;
 
 namespace MyAddressBookPlus
 {
@@ -15,7 +14,7 @@ namespace MyAddressBookPlus
         // Redis cache initialization
         private static Lazy<ConnectionMultiplexer> lazyConnection = new Lazy<ConnectionMultiplexer>(() =>
         {
-            string cacheConnection = ConfigurationManager.AppSettings["CacheConnection"].ToString();
+            string cacheConnection = KeyVaultService.CacheConnection; // ConfigurationManager.AppSettings["CacheConnection"].ToString();
             return ConnectionMultiplexer.Connect(cacheConnection);
         });        
         IDatabase cache = lazyConnection.Value.GetDatabase();

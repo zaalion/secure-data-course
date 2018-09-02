@@ -20,10 +20,20 @@ namespace MyAddressBookPlus.Data
         
         public int AddContact(Contact contact)
         {
-            var sql = "INSERT INTO dbo.[Contact] ([Name] ,[Email] ,[Phone] ,[Address] ,[PictureName]) VALUES" +
-                "(@Name, @Email, @Phone, @Address, @Picturename); " +
+            var sql = "INSERT INTO dbo.[Contact] ([Name] ,[Email] ,[Phone] ,[Address] ,[PictureName], [SIN_Number]) VALUES" +
+                "(@Name, @Email, @Phone, @Address, @Picturename, @SIN_Number); " +
                 "SELECT CAST(SCOPE_IDENTITY() AS INT)";
-            var id = this.db.Query<int>(sql, contact).Single();
+
+            DynamicParameters parameter = new DynamicParameters();
+            parameter.Add("@Name", contact.Name, DbType.String, ParameterDirection.Input);
+            parameter.Add("@Email", contact.Email, DbType.String, ParameterDirection.Input);
+            parameter.Add("@Phone", contact.Phone, DbType.String, ParameterDirection.Input);
+            parameter.Add("@Address", contact.Address, DbType.String, ParameterDirection.Input);
+            parameter.Add("@Picturename", contact.PictureName, DbType.String, ParameterDirection.Input);
+            parameter.Add("@SIN_Number", contact.SIN_Number, DbType.String, ParameterDirection.Input, 9);
+
+            var id = this.db.Query<int>(sql, parameter).Single();
+
             contact.Id = id;
             return id;
         }
